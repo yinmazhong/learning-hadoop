@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" 
+          "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document> 
+
+  <header> 
+    <title>Welcome to Hadoop!</title> 
+  </header> 
+
+  <body> 
+
+    <section>
+      <title>News</title>
+
+      <section>
+      <title>6 February, 2006: nightly builds</title>
+      <p>Hadoop now has nightly builds.  This automatically creates a
+      <a href="ext:nightly">downloadable version of Hadoop every
+      night</a>.  All unit tests must pass, or a message is sent to
+      the developers mailing list and no new version is created.  This
+      also updates the <a href="docs/api/">javadoc</a>.</p>
+      </section>
+
+      <section>
+      <title>3 February, 2006: Hadoop code moved out of Nutch</title>
+      <p>The Hadoop code has now been moved into its own Subversion
+      tree, renamed into packages under <code>org.apache.hadoop</code>.
+      All unit tests pass, but little else has yet been tested.</p> 
+      </section>
+
+      <section>
+      <title>30 March, 2006: Hadoop project approved</title>
+      <p>The Lucene PMC has elected to split the Nutch MapReduce and
+      distributed filesytem code into a new project named Hadoop.</p>
+      </section>
+
+    </section>
+
+  </body>
+
+</document>

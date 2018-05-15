@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="nutch-conf.xsl"?>
+
+<!-- Values used when running unit tests.  This is mostly empty, to -->
+<!-- use of the default values, overriding the potentially -->
+<!-- user-editted hadoop-site.xml in the conf/ directory.  -->
+
+<configuration>
+
+<property>
+  <name>mapred.local.dir</name>
+  <value>build/test/mapred/local</value>
+</property>
+
+<property>
+  <name>mapred.system.dir</name>
+  <value>build/test/mapred/system</value>
+</property>
+
+</configuration>
