@@ -1,0 +1,21 @@
+module org.apache.hadoop.record.test {
+    class RecRecord0 {
+        ustring     StringVal;
+    }
+
+    class RecRecord1 {
+        boolean         BoolVal;
+        byte            ByteVal;
+        int             IntVal;
+        long            LongVal;
+        float           FloatVal; // testing inline comment
+        double          DoubleVal; /* testing comment */
+        ustring         StringVal; /* testing multi-line
+                                    * comment */
+        buffer          BufferVal; // testing another // inline comment 
+        vector<ustring> VectorVal;
+        map<ustring,ustring>   MapVal;
+        RecRecord0      RecordVal;
+    }
+}
+

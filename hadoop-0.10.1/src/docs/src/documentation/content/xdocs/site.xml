@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://xml.apache.org/cocoon/
+
+See http://forrest.apache.org/docs/linking.html for more info.
+-->
+
+<site label="Hadoop" href="" xmlns="http://apache.org/forrest/linkmap/1.0">
+
+  <project label="Project">
+    <news        label="News"             href="index.html" />    
+    <about       label="About"            href="about.html" />    
+    <credits     label="Credits"          href="credits.html" />    
+    <store       label="Buy Stuff"        href="ext:store" />    
+  </project>
+
+  <docs label="Documentation">    
+    <faq         label="FAQ"              href="ext:faq" />    
+    <wiki        label="Wiki"             href="ext:wiki" />    
+    <HDFS        label="Hadoop File System"  href="hdfs_design.html" />    
+    <apidocs     label="API Docs"         href="api/index.html" />
+  </docs>
+
+  <resources label="Resources">
+    <download    label="Download"         href="ext:releases" />
+    <contact     label="Mailing Lists"    href="mailing_lists.html" />
+    <issues      label="Issue Tracking"   href="issue_tracking.html" />
+    <vcs         label="Version Control"  href="version_control.html" />
+  </resources>
+
+  <projects label="Related Projects">
+    <lucene     label="Lucene"		  href="ext:lucene" />
+    <nutch      label="Nutch"             href="ext:nutch" />
+  </projects>
+
+  <external-refs>
+    <lucene    href="http://lucene.apache.org/java/" />
+    <nutch     href="http://lucene.apache.org/nutch/" />
+    <wiki      href="http://wiki.apache.org/lucene-hadoop/" />
+    <faq       href="http://wiki.apache.org/lucene-hadoop/FAQ" />
+    <nightly   href="http://cvs.apache.org/dist/lucene/hadoop/nightly/" />
+    <releases  href="http://www.apache.org/dyn/closer.cgi/lucene/hadoop/" />
+    <store     href="http://www.cafepress.com/hadoop/" />
+  </external-refs>
+ 
+</site>

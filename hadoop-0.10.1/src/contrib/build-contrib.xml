@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+
+<!-- Imported by contrib/*/build.xml files to share generic targets. -->
+
+<project name="hadoopbuildcontrib">
+
+  <property name="name" value="${ant.project.name}"/>
+  <property name="root" value="${basedir}"/>
+
+  <!-- Load all the default properties, and any the user wants    -->
+  <!-- to contribute (without having to type -D or edit this file -->
+  <property file="${user.home}/${name}.build.properties" />
+  <property file="${root}/build.properties" />
+
+  <property name="hadoop.root" location="${root}/../../../"/>
+
+  <property name="src.dir"  location="${root}/src/java"/>
+  <property name="src.test" location="${root}/src/test"/>
+
+  <available file="${src.test}" type="dir" property="test.available"/>
+
+  <property name="conf.dir" location="${hadoop.root}/conf"/>
+  <property name="test.junit.output.format" value="plain"/>
+  <property name="build.dir" location="${hadoop.root}/build/contrib/${name}"/>
+  <property name="build.classes" location="${build.dir}/classes"/>
+  <property name="build.test" location="${build.dir}/test"/>
+  <property name="hadoop.log.dir" location="${build.dir}/test/logs"/>
+  <!-- all jars together -->
+  <property name="deploy.dir" location="${hadoop.root}/build/"/>
+  <property name="javac.deprecation" value="off"/>
+  <property name="javac.debug" value="on"/>
+
+  <property name="javadoc.link"
+            value="http://java.sun.com/j2se/1.4/docs/api/"/>
+
+  <property name="build.encoding" value="ISO-8859-1"/>
+
+  <fileset id="lib.jars" dir="${root}" includes="lib/*.jar"/>
+
+  <!-- the normal classpath -->
+  <path id="classpath">
+    <pathelement location="${build.classes}"/>
+    <fileset refid="lib.jars"/>
+    <pathelement location="${hadoop.root}/build/classes"/>
+    <fileset dir="${hadoop.root}/lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <!-- the unit test classpath -->
+  <path id="test.classpath">
+    <pathelement location="${build.test}" />
+    <pathelement location="${hadoop.root}/build/test/classes"/>
+    <pathelement location="${hadoop.root}/src/contrib/test"/>
+    <pathelement location="${conf.dir}"/>
+    <pathelement location="${hadoop.root}/build"/>
+    <path refid="classpath"/>
+  </path>
+
+
+  <!-- to be overridden by sub-projects -->
+  <target name="init-contrib"/>
+
+  <!-- ====================================================== -->
+  <!-- Stuff needed by all targets                            -->
+  <!-- ====================================================== -->
+  <target name="init">
+    <echo message="contrib: ${name}"/>
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes}"/>
+    <mkdir dir="${build.test}"/>
+    <mkdir dir="${hadoop.log.dir}"/>
+    <antcall target="init-contrib"/>
+  </target>
+
+
+  <!-- ====================================================== -->
+  <!-- Compile a Hadoop contrib's files                       -->
+  <!-- ====================================================== -->
+  <target name="compile" depends="init">
+    <echo message="contrib: ${name}"/>
+    <javac
+     encoding="${build.encoding}"
+     srcdir="${src.dir}"
+     includes="**/*.java"
+     destdir="${build.classes}"
+     debug="${javac.debug}"
+     deprecation="${javac.deprecation}">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Compile test code                                                  -->
+  <!-- ================================================================== -->
+  <target name="compile-test" depends="compile" if="test.available">
+    <echo message="contrib: ${name}"/>
+    <javac
+     encoding="${build.encoding}"
+     srcdir="${src.test}"
+     includes="**/*.java"
+     destdir="${build.test}"
+     debug="${javac.debug}">
+      <classpath refid="test.classpath"/>
+    </javac>
+  </target>
+  
+
+  <!-- ====================================================== -->
+  <!-- Make a Hadoop contrib's jar                            -->
+  <!-- ====================================================== -->
+  <target name="jar" depends="compile">
+    <echo message="contrib: ${name}"/>
+    <jar
+      jarfile="${build.dir}/hadoop-${name}.jar"
+      basedir="${build.classes}"      
+    />
+  </target>
+  
+  <target name="deploy" depends="jar">
+    <echo message="contrib: ${name}"/>
+    <mkdir dir="${deploy.dir}"/>
+    <copy file="${build.dir}/hadoop-${name}.jar" todir="${deploy.dir}"/>
+    <!-- <copy todir="${deploy.dir}" flatten="true">
+      <fileset refid="lib.jars"/>
+    </copy> -->
+  </target>
+  
+  <!-- ================================================================== -->
+  <!-- Run unit tests                                                     -->
+  <!-- ================================================================== -->
+  <target name="test" depends="compile-test, deploy" if="test.available">
+    <echo message="contrib: ${name}"/>
+    <delete dir="${hadoop.log.dir}"/>
+    <mkdir dir="${hadoop.log.dir}"/>
+    <junit
+      printsummary="yes" showoutput="${test.output}" 
+      haltonfailure="no" fork="yes"
+      errorProperty="tests.failed" failureProperty="tests.failed">
+      
+      <sysproperty key="test.build.data" value="${build.test}/data"/>
+      <sysproperty key="build.test" value="${build.test}"/>
+      
+      <!-- requires fork=yes for: 
+        relative File paths to use the specified user.dir 
+        classpath to use build/contrib/*.jar
+      -->
+      <sysproperty key="user.dir" value="${build.test}/data"/>
+      
+      <sysproperty key="fs.default.name" value="${fs.default.name}"/>
+      <sysproperty key="hadoop.test.localoutputfile" value="${hadoop.test.localoutputfile}"/>
+      <sysproperty key="hadoop.log.dir" value="${hadoop.log.dir}"/> 
+      <classpath refid="test.classpath"/>
+      <formatter type="${test.junit.output.format}" />
+      <batchtest todir="${build.test}" unless="testcase">
+        <fileset dir="${src.test}"
+                 includes="**/Test*.java" excludes="**/${test.exclude}.java" />
+      </batchtest>
+      <batchtest todir="${build.test}" if="testcase">
+        <fileset dir="${src.test}" includes="**/${testcase}.java"/>
+      </batchtest>
+    </junit>
+    <fail if="tests.failed">Tests failed!</fail>
+
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Clean.  Delete the build files, and their directories              -->
+  <!-- ================================================================== -->
+  <target name="clean">
+    <echo message="contrib: ${name}"/>
+    <delete dir="${build.dir}"/>
+    <!--<delete dir="${deploy.dir}"/> -->
+  </target>
+
+</project>
